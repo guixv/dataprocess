@@ -1,0 +1,6 @@
+background:unknown
+wall:door,elevator,glass,mirror,glass_frame,curtain,sofa,station,cabinet,front_desk,printer,ceiling,pillar,light,toilet_sign,exit_sign,water_dispenser
+step:floor_socket,mat,blanket,press_line
+waste:person,chair,desk_with_leg,shelf,cart,bed,railing,paper_piece,plastic_piece,paper,sundries,bag,box,barrier,bucket,toy,bottle,potting,wire,table,mainframe,cloth,monitor,board,sweeper,sweeper_station,turnstile
+floor:liquid
+floor_sign:food_particles,plastic_particles,paper_filler,paper_scrap,butt,leaf,stick
