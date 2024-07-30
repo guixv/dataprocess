@@ -8,3 +8,5 @@ python pytorch2onnx.py --config /data/work_folder/qiuchaoyi/code/mmsegCode/confi
 python3 -m onnxsim tmp.onnx out.onnx
 
 python video_onnx_infer_2.py hard_0715.onnx temp --concat --save-img --pr preds/todo
+
+python rename.py ./solve ./solve_rename --prefix 0705_li_
