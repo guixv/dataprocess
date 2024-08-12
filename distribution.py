@@ -57,29 +57,29 @@ def print_class_distribution(class_count):
     for cls, count in sorted(class_count.items(), key=lambda item: item[1], reverse=True):
         print(f"Class {cls}: {count} pixels")
 
+if __name__ == '__main__':
+    # 替换为你的VOC数据集的SegmentationClass目录路径
+    segmentation_dir = 'E:\python\mmsegCode\data\VOCCV_dataset\SegmentationClass_5'
+    # 定义颜色到类别名称的映射
+    # color_to_class = {
+    #     (0, 0, 0): 'wall',     # 颜色 (0, 0, 0) 对应 类别 'Background'
+    #     (128, 0, 0): 'waste',     # 颜色 (128, 0, 0) 对应 类别 'Class 1'
+    #     (0, 128, 0): 'floor',     # 颜色 (0, 128, 0) 对应 类别 'Class 2'
+    #     (128, 128, 0): 'floor_sign',   # 颜色 (128, 128, 0) 对应 类别 'Class 3'
+    #     (224,224,192): 'background',   # 颜色 (128, 0, 128) 对应 类别 'Class 5'
+    # }
+    # 定义颜色到类别名称的映射
+    color_to_class = {
+        (0, 0, 0): 'wall',     # 颜色 (0, 0, 0) 对应 类别 'Background'
+        (128, 0, 0): 'step',     # 颜色 (128, 0, 0) 对应 类别 'Class 1'
+        (0, 128, 0): 'waste',     # 颜色 (0, 128, 0) 对应 类别 'Class 2'
+        (128, 128, 0): 'floor',   # 颜色 (128, 128, 0) 对应 类别 'Class 3'
+        (0, 0, 128): 'floor_sign',     # 颜色 (0, 0, 128) 对应 类别 'Class 4'
+        # (128, 0, 128): 'glass',     # 颜色 (0, 0, 128) 对应 类别 'Class 4'
+        (224,224,192): 'background',   # 颜色 (128, 0, 128) 对应 类别 'Class 5'
+    }
 
-# 替换为你的VOC数据集的SegmentationClass目录路径
-segmentation_dir = 'E:\python\mmsegCode\data\VOCCV_dataset\SegmentationClass_5'
-# 定义颜色到类别名称的映射
-# color_to_class = {
-#     (0, 0, 0): 'wall',     # 颜色 (0, 0, 0) 对应 类别 'Background'
-#     (128, 0, 0): 'waste',     # 颜色 (128, 0, 0) 对应 类别 'Class 1'
-#     (0, 128, 0): 'floor',     # 颜色 (0, 128, 0) 对应 类别 'Class 2'
-#     (128, 128, 0): 'floor_sign',   # 颜色 (128, 128, 0) 对应 类别 'Class 3'
-#     (224,224,192): 'background',   # 颜色 (128, 0, 128) 对应 类别 'Class 5'
-# }
-# 定义颜色到类别名称的映射
-color_to_class = {
-    (0, 0, 0): 'wall',     # 颜色 (0, 0, 0) 对应 类别 'Background'
-    (128, 0, 0): 'step',     # 颜色 (128, 0, 0) 对应 类别 'Class 1'
-    (0, 128, 0): 'waste',     # 颜色 (0, 128, 0) 对应 类别 'Class 2'
-    (128, 128, 0): 'floor',   # 颜色 (128, 128, 0) 对应 类别 'Class 3'
-    (0, 0, 128): 'floor_sign',     # 颜色 (0, 0, 128) 对应 类别 'Class 4'
-    # (128, 0, 128): 'glass',     # 颜色 (0, 0, 128) 对应 类别 'Class 4'
-    (224,224,192): 'background',   # 颜色 (128, 0, 128) 对应 类别 'Class 5'
-}
-
-class_count = parse_segmentation_classes(segmentation_dir, color_to_class)
-print_class_distribution(class_count)
-plot_class_distribution(class_count)
+    class_count = parse_segmentation_classes(segmentation_dir, color_to_class)
+    print_class_distribution(class_count)
+    plot_class_distribution(class_count)
 
