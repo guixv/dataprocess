@@ -150,10 +150,19 @@ def read_merge_label(file_path, background_keep):
 
 def change_trainId(labels, merged_labels):
     """
-    根据 merge label 文件 修改 label 的 trainId
-    :param labels: 从 labelmap 读取的 labels
-    :param merged_labels: 从 merge_label 读取的 labels
-    :return: 修改 trainId 之后的 labels
+    根据 merge label 文件 修改 label 的 trainId。
+    
+    Args:
+        labels (list[Label]): 从 labelmap 读取的 Label 对象列表。
+        merged_labels (list[Label]): 从 merge_label 读取的 Label 对象列表。
+    
+    Returns:
+        list[Label]: 修改 trainId 之后的 Label 对象列表。
+    
+    Raises:
+        AssertionError: 如果 labels 和 merged_labels 的长度不相等，则抛出异常。
+        AssertionError: 如果在 merged_labels 中找不到 labels 中的某个标签，则抛出异常。
+    
     """
     
     print('The num of labels from labelmap: ', len(labels))
@@ -192,9 +201,14 @@ def change_trainId(labels, merged_labels):
 
 def label_colormap(N=256):
     """
-    生成自定义colormap
-    :param N:
-    :return: np array of size (N, 3)
+    生成自定义colormap。
+    
+    Args:
+        N (int): colormap的大小，默认为256。
+    
+    Returns:
+        np.ndarray: 大小为(N, 3)的numpy数组，表示生成的colormap。
+    
     """
     def bitget(byteval, idx):
         return ((byteval & (1 << idx)) != 0)
