@@ -1,0 +1,16 @@
+import os
+import glob
+from PIL import Image
+
+root_dir = './solve'
+dirs = os.listdir(root_dir)
+for path in dirs:
+    JPEG_list = glob.glob(root_dir+'/'+path)
+    print(path)
+    for jpeg in JPEG_list:
+        print(jpeg)
+        img = Image.open(jpeg)
+        new_path = jpeg.replace('.jpeg', '.jpg')
+        # print(img.filename)
+        img.save(new_path, "JPEG", quality=80, optimize=True, progressive=True)
+        os.remove(jpeg)
