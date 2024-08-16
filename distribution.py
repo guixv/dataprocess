@@ -5,13 +5,14 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 from tqdm import tqdm
 
-def parse_segmentation_classes(segmentation_dir, color_to_class):
+def parse_segmentation_classes(segmentation_dir, color_to_class, target_size=(256, 256)):
     """
-    解析分割类别目录，并统计每个类别的像素数量，同时显示处理进度。
+    解析分割类别目录，将所有图片缩放到指定尺寸，并统计每个类别的像素数量，同时显示处理进度。
 
     Args:
         segmentation_dir (str): 分割类别目录路径。
         color_to_class (dict): 颜色到类别的映射字典，形如{颜色: 类别名}。颜色为RGB三元组，类别名为字符串。
+        target_size (tuple): 目标图片尺寸，格式为(宽度, 高度)。
 
     Returns:
         dict: 类别到像素数量的映射字典，形如{类别名: 像素数量}。
@@ -26,6 +27,9 @@ def parse_segmentation_classes(segmentation_dir, color_to_class):
             if seg_file.endswith('.png'):
                 file_path = os.path.join(segmentation_dir, seg_file)
                 seg_image = Image.open(file_path).convert('RGB')  # 确保图像是RGB模式
+                
+                # 缩放图片到指定尺寸
+                seg_image = seg_image.resize(target_size, Image.ANTIALIAS)
                 seg_image_np = np.array(seg_image)
                 
                 # 更新进度条
@@ -116,7 +120,7 @@ if __name__ == '__main__':
         (224,224,192): 'background',   # 颜色 (128, 0, 128) 对应 类别 'Class 5'
     }
 
-    class_count = parse_segmentation_classes(segmentation_dir, color_to_class)
+    class_count = parse_segmentation_classes(segmentation_dir, color_to_class,target_size=(480,640))
     print_class_distribution(class_count)
     plot_class_distribution(class_count)
 
