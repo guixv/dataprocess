@@ -3,14 +3,15 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 from collections import defaultdict
+from tqdm import tqdm
 
 def parse_segmentation_classes(segmentation_dir, color_to_class):
     """
-    解析分割类别目录，并统计每个类别的像素数量。
+    解析分割类别目录，并统计每个类别的像素数量，同时显示处理进度。
 
     Args:
         segmentation_dir (str): 分割类别目录路径。
-        color_to_class (dict): 颜色到类别的映射字典，形如{颜色: 类别名}。
+        color_to_class (dict): 颜色到类别的映射字典，形如{颜色: 类别名}。颜色为RGB三元组，类别名为字符串。
 
     Returns:
         dict: 类别到像素数量的映射字典，形如{类别名: 像素数量}。
@@ -18,15 +19,22 @@ def parse_segmentation_classes(segmentation_dir, color_to_class):
     """
     class_count = defaultdict(int)
 
-    for seg_file in os.listdir(segmentation_dir):
-        if seg_file.endswith('.png'):
-            file_path = os.path.join(segmentation_dir, seg_file)
-            seg_image = Image.open(file_path).convert('RGB')  # 确保图像是RGB模式
-            seg_image_np = np.array(seg_image)
-            for color, class_name in color_to_class.items():
-                mask = np.all(seg_image_np == np.array(color).reshape(1, 1, 3), axis=-1)
-                class_count[class_name] += np.sum(mask)
+    # 使用tqdm创建进度条，total参数设置为目录中的.png文件数量
+    total_files = sum(1 for file in os.listdir(segmentation_dir) if file.endswith('.png'))
+    with tqdm(total=total_files, desc='Processing files', unit='files') as pbar:
+        for seg_file in os.listdir(segmentation_dir):
+            if seg_file.endswith('.png'):
+                file_path = os.path.join(segmentation_dir, seg_file)
+                seg_image = Image.open(file_path).convert('RGB')  # 确保图像是RGB模式
+                seg_image_np = np.array(seg_image)
                 
+                # 更新进度条
+                pbar.update(1)
+
+                for color, class_name in color_to_class.items():
+                    mask = np.all(seg_image_np == np.array(color).reshape(1, 1, 3), axis=-1)
+                    class_count[class_name] += np.sum(mask)
+
     return class_count
 
 def plot_class_distribution(class_count):
@@ -56,6 +64,35 @@ def print_class_distribution(class_count):
     print("Class Distribution:")
     for cls, count in sorted(class_count.items(), key=lambda item: item[1], reverse=True):
         print(f"Class {cls}: {count} pixels")
+
+def label_colormap(N=256):
+    """
+    生成自定义colormap。
+    
+    Args:
+        N (int): colormap的大小，默认为256。
+    
+    Returns:
+        np.ndarray: 大小为(N, 3)的numpy数组，表示生成的colormap。
+    
+    """
+    def bitget(byteval, idx):
+        return ((byteval & (1 << idx)) != 0)
+
+    cmap = np.zeros((N, 3))
+    for i in range(0, N):
+        id = i
+        r, g, b = 0, 0, 0
+        for j in range(0, 8):
+            r = np.bitwise_or(r, (bitget(id, 0) << 7 - j))
+            g = np.bitwise_or(g, (bitget(id, 1) << 7 - j))
+            b = np.bitwise_or(b, (bitget(id, 2) << 7 - j))
+            id = (id >> 3)
+        cmap[i, 0] = r
+        cmap[i, 1] = g
+        cmap[i, 2] = b
+    cmap = cmap.astype(np.float32)
+    return cmap
 
 if __name__ == '__main__':
     # 替换为你的VOC数据集的SegmentationClass目录路径
