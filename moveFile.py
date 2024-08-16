@@ -37,9 +37,10 @@ def copy_matching_files(src_dir, ref_dir, dest_dir):
                     print(f"Copied: {src_file_path} -> {dest_file_path}")
                     break  # 假设每个基名只对应一个参考文件，复制后跳出循环
 
-# 使用示例
-src_folder = 'A'  # A文件夹路径
-ref_folder = 'B'  # B文件夹路径
-dest_folder = 'C' # C文件夹路径
+if __name__ == '__main__':
+    # 使用示例
+    src_folder = 'A'  # A文件夹路径
+    ref_folder = 'B'  # B文件夹路径
+    dest_folder = 'C' # C文件夹路径
 
-copy_matching_files(src_folder, ref_folder, dest_folder)
+    copy_matching_files(src_folder, ref_folder, dest_folder)
