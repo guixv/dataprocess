@@ -66,9 +66,11 @@ def plot_class_distribution(class_count):
 
 def print_class_distribution(class_count):
     print("Class Distribution:")
+    total = sum(class_count.values())
     for cls, count in sorted(class_count.items(), key=lambda item: item[1], reverse=True):
-        print(f"Class {cls}: {count} pixels")
-
+        print(f"Class {cls}: {count} pixels || {count/total*100:.2f}%")
+    print(f"Total: {total} pixels")
+    
 def label_colormap(N=256):
     """
     生成自定义colormap。
@@ -120,7 +122,7 @@ if __name__ == '__main__':
         (224,224,192): 'background',   # 颜色 (128, 0, 128) 对应 类别 'Class 5'
     }
 
-    class_count = parse_segmentation_classes(segmentation_dir, color_to_class,target_size=(480,640))
+    class_count = parse_segmentation_classes(segmentation_dir, color_to_class,target_size=(448,448))
     print_class_distribution(class_count)
     plot_class_distribution(class_count)
 
