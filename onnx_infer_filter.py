@@ -135,7 +135,7 @@ def calculate_metrics_filter(image, scores, ids, scores_threshold=0.95, class_fr
     weights = np.zeros_like(ids).astype(np.float32)
     for k in class_frequency.keys():
         weights[ids == int(k)] = 1 - class_frequency[k]
-    unsure = np.sum((1 - scores) * weights * area) / (h * w)
+    unsure = np.sum((scores_threshold - scores) * weights * area) / (h * w)
 
     # 边缘重合度
     ids_edge = cv2.Canny(ids.astype(np.uint8), 1, 10)
@@ -148,11 +148,11 @@ def calculate_metrics_filter(image, scores, ids, scores_threshold=0.95, class_fr
     # 筛选规则
     # 情况1：该图像中出现较少出现的类别，严格筛选条件
     if len([k for k in rare_class if k in np.unique(ids)]) > 0:
-        if unsure > 0.025 or (edge < 0.25 and unsure > 0.01):
+        if unsure > 0.1 or (edge < 0.25 and unsure > 0.05):
             return True, unsure, edge
     # 情况2：正常筛选
     else:
-        if unsure > 0.05 or (edge < 0.15 and unsure > 0.01):
+        if unsure > 0.2 or (edge < 0.15 and unsure > 0.1):
             return True, unsure, edge
     return False, unsure, edge
 
@@ -243,7 +243,7 @@ def infer_media(args, is_video=True):
 
         # 得到过滤结果
         if_filtered, unsure, edge = calculate_metrics_filter(rgb_cv_image, scores, pred_ids, 
-                                                         scores_threshold=0.95, class_frequency=class_frequency, rare_class=rare_class)
+                                                         scores_threshold=5, class_frequency=class_frequency, rare_class=rare_class)
         
         # print(f'{item.stem} filtered, unsure={unsure}, edge={edge} pred_ids={pred_ids} scores={scores}')
         if args.filter and not if_filtered:
